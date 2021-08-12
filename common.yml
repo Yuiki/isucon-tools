@@ -23,6 +23,7 @@
           - python3-pip
           - percona-toolkit
           - unzip
+          - dstat
         update_cache: yes
       become: true
 
