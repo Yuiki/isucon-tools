@@ -1,0 +1,91 @@
+- hosts: all
+  user: isucon
+  tasks:
+    - name: Install packages for dpkg
+      apt:
+        name:
+          - wget
+          - gnupg2
+          - curl
+          - lsb-release
+        update_cache: yes
+      become: true
+
+    - name: Configure Percona Repository
+      apt:
+        deb: https://repo.percona.com/apt/percona-release_latest.generic_all.deb
+      become: true
+
+    - name: Install packages
+      apt:
+        name:
+          - docker.io
+          - python3-pip
+          - percona-toolkit
+          - unzip
+        update_cache: yes
+      become: true
+
+    - name: Install docker (Python)
+      pip:
+        name: docker
+      become: true
+
+    - name: Run netdata
+      docker_container:
+        name: netdata
+        ports:
+          - "19999:19999"
+        volumes:
+          - netdataconfig:/etc/netdata
+          - netdatalib:/var/lib/netdata
+          - netdatacache:/var/cache/netdata
+          - /etc/passwd:/host/etc/passwd:ro
+          - /etc/group:/host/etc/group:ro
+          - /proc:/host/proc:ro
+          - /sys:/host/sys:ro
+          - /etc/os-release:/host/etc/os-release:ro
+        restart_policy: unless-stopped
+        capabilities:
+          - SYS_PTRACE
+        security_opts: "apparmor:unconfined"
+        container_default_behavior: no_defaults
+        image: netdata/netdata
+      become: true
+
+    - name: Get alp
+      get_url:
+        url: https://github.com/tkuchiki/alp/releases/download/v1.0.6/alp_linux_amd64.zip
+        dest: /tmp
+
+    - name: Unarchive alp
+      ansible.builtin.unarchive:
+        remote_src: yes
+        src: /tmp/alp_linux_amd64.zip
+        dest: /tmp
+
+    - name: Install alp
+      command: install /tmp/alp /usr/local/bin/alp
+      become: true
+
+    - name: Install nvm
+      shell: >
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+      args:
+        creates: "{{ ansible_env.HOME }}/.nvm/nvm.sh"
+
+    - name: Generate SSH keypair
+      community.crypto.openssh_keypair:
+        path: ~/.ssh/id_rsa
+
+    - name: Set git config user.name (global)
+      community.general.git_config:
+        name: user.name
+        scope: global
+        value: "haigyo"
+
+    - name: Set git config user.email (global)
+      community.general.git_config:
+        name: user.email
+        scope: global
+        value: "haigyo@example.com"
