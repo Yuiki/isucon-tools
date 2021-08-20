@@ -1,5 +1,5 @@
 - hosts: all
-  user: isucon
+  user: ubuntu
   tasks:
     - name: Install packages for dpkg
       apt:
@@ -60,7 +60,7 @@
         dest: /tmp
 
     - name: Unarchive alp
-      ansible.builtin.unarchive:
+      unarchive:
         remote_src: yes
         src: /tmp/alp_linux_amd64.zip
         dest: /tmp
@@ -75,18 +75,26 @@
       args:
         creates: "{{ ansible_env.HOME }}/.nvm/nvm.sh"
 
-    - name: Generate SSH keypair
-      community.crypto.openssh_keypair:
-        path: ~/.ssh/id_rsa
+    - name: Copy SSH private key
+      copy:
+        src: ./secret/id_rsa
+        dest: ~/.ssh/
+        force: no
+
+    - name: Copy SSH public key
+      copy:
+        src: ./secret/id_rsa.pub
+        dest: ~/.ssh/
+        force: no
 
     - name: Set git config user.name (global)
-      community.general.git_config:
+      git_config:
         name: user.name
         scope: global
         value: "haigyo"
 
     - name: Set git config user.email (global)
-      community.general.git_config:
+      git_config:
         name: user.email
         scope: global
         value: "haigyo@example.com"

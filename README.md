@@ -15,11 +15,14 @@
 ## Usage
 
 ```sh
+# generate ssh key for remote in locaol
+ssh-keygen -f secret/id_rsa
+
 # prepare connecting via ssh to myself
 cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
 
 # install ansible collections
-ansible-galaxy collection install community.crypto community.general
+ansible-galaxy collection install community.general
 
 # install tools
 ansible-playbook -i <IP Address>, common.yml
