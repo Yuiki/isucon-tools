@@ -1,5 +1,5 @@
 - hosts: all
-  user: ubuntu
+  user: isucon
   tasks:
     - name: Install packages for dpkg
       apt:
