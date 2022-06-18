@@ -74,6 +74,7 @@
         src: ./secret/id_rsa
         dest: ~/.ssh/
         force: no
+        mode: '0600'
 
     - name: Copy SSH public key
       copy:
