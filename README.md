@@ -18,6 +18,10 @@
 # generate ssh key for remote in locaol
 ssh-keygen -f secret/id_rsa
 
+# get and save GitHub access token 
+# https://github.com/settings/tokens
+echo "your-access-token" > secret/github_token
+
 # prepare connecting via ssh to myself
 cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
 
