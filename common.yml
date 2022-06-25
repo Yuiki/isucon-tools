@@ -24,6 +24,8 @@
           - percona-toolkit
           - unzip
           - dstat
+          - emacs
+          - graphviz
         update_cache: yes
       become: true
 
