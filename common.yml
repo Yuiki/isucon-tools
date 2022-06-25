@@ -22,7 +22,9 @@
       become: true
 
     - name: Sign In to GitHub CLI
-      shell: echo {{lookup('file', './secret/github_token') }} | gh auth login --with-token
+      args:
+        stdin: "{{ lookup('file', './secret/github_token') }}"
+      command: gh auth login --with-token
 
     - name: Install packages
       apt:
