@@ -16,6 +16,16 @@
         deb: https://repo.percona.com/apt/percona-release_latest.generic_all.deb
       become: true
 
+    - name: Install GitHub CLI
+      apt:
+        deb:  https://github.com/cli/cli/releases/download/v2.13.0/gh_2.13.0_linux_amd64.deb
+      become: true
+
+    - name: Sign In to GitHub CLI
+      args:
+        stdin: "{{ lookup('file', './secret/github_token') }}"
+      command: gh auth login --with-token
+
     - name: Install packages
       apt:
         name:
