@@ -99,7 +99,7 @@
 
     - name: Get alp
       get_url:
-        url: https://github.com/tkuchiki/alp/releases/download/v1.0.10/alp_linux_amd64.zip
+        url: https://github.com/tkuchiki/alp/releases/download/v1.0.11/alp_linux_amd64.zip
         dest: /tmp
 
     - name: Unarchive alp
